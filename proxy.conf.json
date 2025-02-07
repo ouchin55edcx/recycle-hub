@@ -1,0 +1,14 @@
+{
+  "/users": {
+    "target": "http://localhost:3000",
+    "secure": false
+  },
+  "/demands": {
+    "target": "http://localhost:3000",
+    "secure": false
+  },
+  "/points": {
+    "target": "http://localhost:3000",
+    "secure": false
+  }
+}

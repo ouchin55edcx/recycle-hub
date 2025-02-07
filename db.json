@@ -1,6 +1,16 @@
 {
-    "posts": [
-      { "id": 1, "title": "First Post", "author": "John" },
-      { "id": 2, "title": "Second Post", "author": "Jane" }
-    ]
-  }
+  "users": [
+    {
+      "id": "be74",
+      "email": "girym@mailinator.com",
+      "password": "Pa$$w0rd!",
+      "firstName": "Quos pariatur Vel r",
+      "lastName": "Aut velit sit aliqua",
+      "birthDate": "2003-04-12",
+      "phone": "0602010201",
+      "address": "qdqdqdq",
+      "role": "user",
+      "registrationDate": "2025-02-07T21:04:44.236Z"
+    }
+  ]
+}

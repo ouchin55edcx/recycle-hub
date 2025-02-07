@@ -1,27 +1,42 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { User } from '../models/user.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  signup(name: string, email: string, password: string) {
-    const user = { name, email, password };
-    localStorage.setItem('user', JSON.stringify(user));
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient) {}
+
+  get currentUser(): User | null {
+    return this.currentUserSubject.value;
   }
 
-  login(email: string, password: string): boolean {
-    const user = localStorage.getItem('user');
-    if (!user) return false;
-
-    const userData = JSON.parse(user);
-    return userData.email === email && userData.password === password;
+  login(credentials: { email: string; password: string }) {
+    return this.http.get<User[]>(`/users?email=${credentials.email}&password=${credentials.password}`);
+  }
+  
+  register(user: User) {
+    return this.http.post<User>('/users', user);
   }
 
-  logout() {
-    localStorage.removeItem('user');
+  logout(): void {
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('currentUser');
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('user') !== null;
+  updateUserProfile(userId: number, updates: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`/users/${userId}`, updates).pipe(
+      tap(updatedUser => this.currentUserSubject.next(updatedUser))
+    );
+  }
+
+  autoLogin(): void {
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+      this.currentUserSubject.next(JSON.parse(userData));
+    }
   }
 }
