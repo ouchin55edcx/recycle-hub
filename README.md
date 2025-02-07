@@ -58,3 +58,65 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 # recycle-hub
+
+
+src/
+└── app/
+    ├── components/              // Reusable components (e.g., header, footer, navbar)
+    │   └── shared/
+    │       ├── header/
+    │       │   ├── header.component.ts
+    │       │   ├── header.component.html
+    │       │   └── header.component.scss
+    │       └── footer/
+    │           ├── footer.component.ts
+    │           ├── footer.component.html
+    │           └── footer.component.scss
+    │
+    ├── pages/                   // Main pages/views of the app
+    │   ├── auth/                // Authentication pages
+    │   │   ├── login/
+    │   │   │   ├── login.component.ts
+    │   │   │   ├── login.component.html
+    │   │   │   └── login.component.scss
+    │   │   └── register/
+    │   │       ├── register.component.ts
+    │   │       ├── register.component.html
+    │   │       └── register.component.scss
+    │   │
+    │   ├── user/                // Pages for particuliers (users)
+    │   │   ├── dashboard/
+    │   │   │   ├── dashboard.component.ts
+    │   │   │   ├── dashboard.component.html
+    │   │   │   └── dashboard.component.scss
+    │   │   ├── profile/
+    │   │   │   ├── profile.component.ts
+    │   │   │   ├── profile.component.html
+    │   │   │   └── profile.component.scss
+    │   │   └── requests/         // Recycling requests management
+    │   │       ├── create-request/
+    │   │       │   ├── create-request.component.ts
+    │   │       │   ├── create-request.component.html
+    │   │       │   └── create-request.component.scss
+    │   │       └── request-list/
+    │   │           ├── request-list.component.ts
+    │   │           ├── request-list.component.html
+    │   │           └── request-list.component.scss
+    │   │
+    │   └── collector/           // Pages for collectors
+    │       └── collector-dashboard/
+    │           ├── collector-dashboard.component.ts
+    │           ├── collector-dashboard.component.html
+    │           └── collector-dashboard.component.scss
+    │
+    ├── services/                // Services for business logic (e.g., AuthService, RequestService)
+    │   ├── auth.service.ts
+    │   └── request.service.ts
+    │
+    ├── models/                  // Interfaces and types (e.g., User, Request)
+    │   ├── user.model.ts
+    │   └── request.model.ts
+    │
+    ├── app-routing.module.ts    // Application-level routes for navigation
+    └── app.module.ts            // Main module declaration
+    
