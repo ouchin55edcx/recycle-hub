@@ -11,6 +11,18 @@
       "address": "qdqdqdq",
       "role": "user",
       "registrationDate": "2025-02-07T21:04:44.236Z"
+    },
+    {
+      "id": "1bfe",
+      "email": "mysy@mailinator.com",
+      "password": "Pa$$w0rd!",
+      "firstName": "Qui voluptatibus eni",
+      "lastName": "Aspernatur animi do",
+      "birthDate": "1988-10-10",
+      "phone": "0636321412",
+      "address": "dqefdqfq",
+      "role": "user",
+      "registrationDate": "2025-02-07T21:52:39.085Z"
     }
   ]
 }

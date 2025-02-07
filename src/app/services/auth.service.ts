@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private apiUrl = 'http://localhost:3000';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -15,11 +16,28 @@ export class AuthService {
   }
 
   login(credentials: { email: string; password: string }) {
-    return this.http.get<User[]>(`/users?email=${credentials.email}&password=${credentials.password}`);
+    // Using GET with query params for JSON Server
+    return this.http.get<User[]>(`${this.apiUrl}/users?email=${credentials.email}`).pipe(
+      map(users => {
+        const user = users[0];
+        if (user && user.password === credentials.password) {
+          this.currentUserSubject.next(user);
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          return user;
+        }
+        throw new Error('Invalid email or password');
+      })
+    );
   }
-  
+
   register(user: User) {
-    return this.http.post<User>('/users', user);
+    return this.http.post<User>(`${this.apiUrl}/users`, user).pipe(
+      tap(newUser => {
+        // Optionally auto-login after registration
+        this.currentUserSubject.next(newUser);
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+      })
+    );
   }
 
   logout(): void {
@@ -28,8 +46,11 @@ export class AuthService {
   }
 
   updateUserProfile(userId: number, updates: Partial<User>): Observable<User> {
-    return this.http.patch<User>(`/users/${userId}`, updates).pipe(
-      tap(updatedUser => this.currentUserSubject.next(updatedUser))
+    return this.http.patch<User>(`${this.apiUrl}/users/${userId}`, updates).pipe(
+      tap(updatedUser => {
+        this.currentUserSubject.next(updatedUser);
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      })
     );
   }
 
