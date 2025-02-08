@@ -19,10 +19,46 @@
       "firstName": "Qui voluptatibus eni",
       "lastName": "Aspernatur animi do",
       "birthDate": "1988-10-10",
-      "phone": "0636321412",
-      "address": "dqefdqfq",
+      "phone": "0636321413",
+      "address": "test",
       "role": "user",
       "registrationDate": "2025-02-07T21:52:39.085Z"
+    },
+    {
+      "id": "05f7",
+      "email": "pyhapused@mailinator.com",
+      "password": "Pa$$w0rd!",
+      "firstName": "Accusantium rerum ar",
+      "lastName": "Perferendis consequa",
+      "birthDate": "2012-02-14",
+      "phone": "0636353214",
+      "address": "sdsdfsd",
+      "role": "user",
+      "registrationDate": "2025-02-08T11:27:00.019Z"
+    }
+  ],
+  "demands": [
+    {
+      "id": "4e1f",
+      "type": "glass",
+      "weight": 1942,
+      "address": "Voluptatum quos quis",
+      "status": "pending",
+      "requestDate": "2025-01-02",
+      "collectionTime": "19:05",
+      "notes": "Aliquip proident mi",
+      "userId": "1bfe"
+    },
+    {
+      "id": "55f3",
+      "type": "glass",
+      "weight": 1942,
+      "address": "Voluptatum quos quis",
+      "status": "pending",
+      "requestDate": "2025-01-02",
+      "collectionTime": "19:05",
+      "notes": "Aliquip proident midsdc",
+      "userId": "1bfe"
     }
   ]
 }

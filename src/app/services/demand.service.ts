@@ -1,37 +1,39 @@
+// demand.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Demand } from '../models/demand.model';
+import { Demand, CreateDemandDto } from '../models/demand.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class DemandService {
+  private apiUrl = 'http://localhost:3000';
+
   constructor(private http: HttpClient) {}
 
-  createDemand(demand: Omit<Demand, 'id'>): Observable<Demand> {
-    return this.http.post<Demand>('/demands', {
+  createDemand(demand: CreateDemandDto): Observable<Demand> {
+    return this.http.post<Demand>(`${this.apiUrl}/demands`, {
       ...demand,
-      status: 'en_attente',
-      requestDate: new Date().toISOString()
+      status: 'pending'
     });
   }
 
   getUserDemands(userId: number): Observable<Demand[]> {
-    return this.http.get<Demand[]>(`/demands?userId=${userId}`);
-  }
-
-  getCollectorDemands(city: string): Observable<Demand[]> {
-    return this.http.get<Demand[]>(`/demands?address.city=${city}&status=en_attente`);
-  }
-
-  updateDemandStatus(id: number, status: Demand['status']): Observable<Demand> {
-    return this.http.patch<Demand>(`/demands/${id}`, { status });
+    return this.http.get<Demand[]>(`${this.apiUrl}/demands?userId=${userId}`);
   }
 
   deleteDemand(id: number): Observable<void> {
-    return this.http.delete<void>(`/demands/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/demands/${id}`);
   }
 
-  updateDemand(id: number, updates: Partial<Demand>): Observable<Demand> {
-    return this.http.patch<Demand>(`/demands/${id}`, updates);
+  // New: Get demands filtered by status and city (partial match on address)
+  getDemandsByStatusAndCity(status: string, city: string): Observable<Demand[]> {
+    return this.http.get<Demand[]>(`${this.apiUrl}/demands?status=${status}&address_like=${city}`);
+  }
+
+  // New: Update only the status field of a demand
+  updateDemandStatus(id: number, newStatus: string): Observable<Demand> {
+    return this.http.patch<Demand>(`${this.apiUrl}/demands/${id}`, { status: newStatus });
   }
 }

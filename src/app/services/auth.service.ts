@@ -9,14 +9,13 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {} // Remove DemandService and AuthService
 
   get currentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
   login(credentials: { email: string; password: string }) {
-    // Using GET with query params for JSON Server
     return this.http.get<User[]>(`${this.apiUrl}/users?email=${credentials.email}`).pipe(
       map(users => {
         const user = users[0];
@@ -33,7 +32,6 @@ export class AuthService {
   register(user: User) {
     return this.http.post<User>(`${this.apiUrl}/users`, user).pipe(
       tap(newUser => {
-        // Optionally auto-login after registration
         this.currentUserSubject.next(newUser);
         localStorage.setItem('currentUser', JSON.stringify(newUser));
       })

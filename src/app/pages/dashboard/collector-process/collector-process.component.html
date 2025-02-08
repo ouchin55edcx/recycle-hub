@@ -1,0 +1,41 @@
+<div class="container mx-auto p-4">
+  <h2 class="text-2xl font-bold mb-4">Processus de Collecte</h2>
+  <p *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</p>
+
+  <!-- Liste des demandes disponibles (en attente) -->
+  <div *ngIf="!selectedDemand">
+    <h3 class="text-xl font-semibold mb-2">Demandes disponibles dans votre ville</h3>
+    <ul>
+      <li *ngFor="let demand of availableDemands" class="border p-4 mb-2">
+        <p><strong>Type:</strong> {{ demand.type | titlecase }}</p>
+        <p><strong>Adresse:</strong> {{ demand.address }}</p>
+        <p><strong>Date:</strong> {{ demand.requestDate | date:'mediumDate' }}</p>
+        <button (click)="selectDemand(demand)" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded">
+          Accepter la demande (Occupée)
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Détails de la demande sélectionnée et actions sur site -->
+  <div *ngIf="selectedDemand">
+    <h3 class="text-xl font-semibold mb-2">Détails de la demande sélectionnée</h3>
+    <p><strong>Type:</strong> {{ selectedDemand.type | titlecase }}</p>
+    <p><strong>Adresse:</strong> {{ selectedDemand.address }}</p>
+    <p><strong>Poids prévu:</strong> {{ selectedDemand.weight }} grammes</p>
+    <p><strong>Statut:</strong> {{ selectedDemand.status }}</p>
+
+    <!-- Actions lorsque le collecteur est sur place -->
+    <div class="mt-4">
+      <button (click)="updateDemandStatus('en cours')" class="px-4 py-2 bg-orange-500 text-white rounded mr-2">
+        Commencer la collecte (En cours)
+      </button>
+      <button (click)="updateDemandStatus('validée')" class="px-4 py-2 bg-green-600 text-white rounded mr-2">
+        Valider la collecte (Validée)
+      </button>
+      <button (click)="updateDemandStatus('rejetée')" class="px-4 py-2 bg-red-600 text-white rounded">
+        Rejeter la collecte (Rejetée)
+      </button>
+    </div>
+  </div>
+</div>

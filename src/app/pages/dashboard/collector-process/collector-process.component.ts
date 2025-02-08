@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -26,6 +26,13 @@ import { AuthService } from '../../services/auth.service';
                 routerLinkActive="bg-green-100 text-green-900"
               >
                 Collections
+              </a>
+              <a
+                routerLink="/dashboard/collector-process"
+                class="text-green-700 hover:text-green-900 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
+                routerLinkActive="bg-green-100 text-green-900"
+              >
+                Collection Process
               </a>
             </div>
 

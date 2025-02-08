@@ -8,19 +8,19 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { 
+  {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/dashboard/dashboard.component')
       .then(m => m.DashboardComponent),
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { 
+      {
         path: 'profile',
         loadComponent: () => import('./pages/dashboard/profile/profile.component')
           .then(m => m.ProfileComponent)
       },
-      { 
+      {
         path: 'collections',
         loadComponent: () => import('./pages/dashboard/collections/collections.component')
           .then(m => m.CollectionsComponent)

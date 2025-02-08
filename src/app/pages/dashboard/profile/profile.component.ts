@@ -6,17 +6,7 @@ import { User } from '../../../models/user.model';
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `
-    <div class="profile">
-      <h2>Profile Settings</h2>
-      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-        <input formControlName="email" type="email" placeholder="Email">
-        <input formControlName="phone" type="tel" placeholder="Phone">
-        <textarea formControlName="address" placeholder="Address"></textarea>
-        <button type="submit" [disabled]="!profileForm.valid">Update</button>
-      </form>
-    </div>
-  `
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent {
   auth = inject(AuthService);
