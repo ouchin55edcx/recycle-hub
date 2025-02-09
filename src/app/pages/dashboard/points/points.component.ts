@@ -5,6 +5,7 @@ import { PointsService } from '../../../services/points.service';
 import { ToastService } from '../../../services/toast.service';
 import { PointsTransaction, Voucher, VOUCHER_TIERS } from '../../../models/points.model';
 import { AuthService } from '../../../services/auth.service';
+import { DemandService } from '../../../services/demand.service';
 
 @Component({
   selector: 'app-points',
@@ -92,12 +93,16 @@ export class PointsComponent implements OnInit {
   activeVouchers: Voucher[] = [];
   voucherTiers = VOUCHER_TIERS;
   conversionForm: FormGroup;
+  points = 0;
+  vouchers: Voucher[] = [];
+  pendingPoints = 0;
 
   constructor(
     private pointsService: PointsService,
     private fb: FormBuilder,
     private toast: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private demandService: DemandService
   ) {
     this.conversionForm = this.fb.group({
       points: [null, Validators.required]
@@ -105,10 +110,23 @@ export class PointsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadUserData();
+    this.loadPoints();
+    this.loadTransactions();
+    this.loadVouchers();
   }
 
-  loadUserData() {
+  private loadPoints() {
+    if (this.authService.currentUser) {
+      this.pointsService.getUserPoints(this.authService.currentUser.id).subscribe({
+        next: (points) => {
+          this.points = points;
+        },
+        error: (error) => console.error('Failed to load points:', error)
+      });
+    }
+  }
+
+  loadTransactions() {
     const userId = this.authService.currentUser?.id;
     if (!userId) {
       this.toast.showError('User not authenticated');
@@ -117,16 +135,21 @@ export class PointsComponent implements OnInit {
     
     const userIdString = userId.toString();
     
-    this.pointsService.getUserPoints(userIdString).subscribe({
-      next: (points) => this.currentPoints = points,
-      error: () => this.toast.showError('Failed to load points balance')
-    });
-
     this.pointsService.getTransactionHistory(userIdString).subscribe({
       next: (transactions) => this.transactions = transactions,
       error: () => this.toast.showError('Failed to load transaction history')
     });
+  }
 
+  loadVouchers() {
+    const userId = this.authService.currentUser?.id;
+    if (!userId) {
+      this.toast.showError('User not authenticated');
+      return;
+    }
+    
+    const userIdString = userId.toString();
+    
     this.pointsService.getUserVouchers(userIdString).subscribe({
       next: (vouchers) => this.activeVouchers = vouchers.filter(v => v.status === 'active'),
       error: () => this.toast.showError('Failed to load vouchers')
@@ -148,7 +171,7 @@ export class PointsComponent implements OnInit {
     this.pointsService.generateVoucher(userIdString, pointsToConvert).subscribe({
       next: (voucher) => {
         this.toast.showSuccess(`Successfully generated ${voucher.value}DH voucher`);
-        this.loadUserData();
+        this.loadPoints();
         this.conversionForm.reset();
       },
       error: () => this.toast.showError('Failed to generate voucher')

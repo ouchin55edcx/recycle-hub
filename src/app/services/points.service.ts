@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { PointsTransaction, Voucher, POINTS_RATES, VOUCHER_TIERS } from '../models/points.model';
 import { Demand } from '../models/demand.model';
 
@@ -15,15 +15,29 @@ export class PointsService {
     '500': 350   // 500 points = 350 Dh
   };
 
+  private readonly POINTS_RATES: Record<string, number> = {
+    'plastic': 2,  // 2 points per kg
+    'glass': 3,    // 3 points per kg
+    'paper': 1,    // 1 point per kg
+    'metal': 4     // 4 points per kg
+  };
+
   constructor(private http: HttpClient) {}
 
   getUserPoints(userId: string): Observable<number> {
     return this.http.get<PointsTransaction[]>(
       `${this.apiUrl}/pointsTransactions?userId=${userId}`
     ).pipe(
-      map(transactions => transactions.reduce((total, t) => 
-        total + (t.type === 'earned' ? t.amount : -t.amount), 0)
-      )
+      map(transactions => {
+        return transactions.reduce((total, t) => {
+          if (t.type === 'earned') {
+            return total + t.amount;
+          } else if (t.type === 'spent') {
+            return total - t.amount;
+          }
+          return total;
+        }, 0);
+      })
     );
   }
 
@@ -42,19 +56,38 @@ export class PointsService {
     }, 0);
   }
 
-  awardPointsForCollection(demand: Demand): Observable<PointsTransaction> {
-    const points = this.calculatePointsForDemand(demand);
+  calculatePointsForCollection(demand: Demand): number {
+    if (!demand.actualWeight || !demand.types) return 0;
+    
+    const weightInKg = demand.actualWeight / 1000; // Convert grams to kg
+    return Math.round(demand.types.reduce((points, type) => {
+      const rate = this.POINTS_RATES[type.toLowerCase()];
+      return points + (rate * weightInKg);
+    }, 0));
+  }
+
+  awardPointsForCollection(demand: Demand): Observable<void> {
+    // Early return if required data is missing
+    if (!demand.actualWeight || !demand.types || demand.status !== 'validated') {
+      console.error('Missing required data for points calculation or demand not validated');
+      return of(void 0);
+    }
+
+    const points = this.calculatePointsForCollection(demand);
+    const weightInKg = demand.actualWeight / 1000;
+    
     const transaction: Omit<PointsTransaction, 'id'> = {
       userId: demand.userId,
       amount: points,
-      type: 'earned',
+      type: 'earned' as const,
       source: 'collection',
       demandId: demand.id,
       date: new Date().toISOString(),
-      description: `Points earned from ${demand.types.join(', ')} collection (${demand.actualWeight! / 1000}kg)`
+      description: `Points earned from ${demand.types.join(', ')} collection (${weightInKg}kg)`
     };
 
-    return this.http.post<PointsTransaction>(`${this.apiUrl}/pointsTransactions`, transaction);
+    // Create a new points transaction
+    return this.http.post<void>(`${this.apiUrl}/pointsTransactions`, transaction);
   }
 
   generateVoucher(userId: string, pointsToSpend: 100 | 200 | 500): Observable<Voucher> {

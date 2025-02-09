@@ -5,6 +5,8 @@ import { DemandService } from '../../../services/demand.service';
 import { ToastService } from '../../../services/toast.service';
 import { Demand } from '../../../models/demand.model';
 import { DemandStatus } from '../../../types/demand.types';
+import { PointsService } from '../../../services/points.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-collection-processing',
@@ -111,11 +113,14 @@ export class CollectionProcessingComponent implements OnInit {
   selectedPhotos: { file: File; preview: string }[] = [];
   weightDifference: number = 0;
   weightDifferencePercentage: number = 0;
+  apiUrl: string;
 
   constructor(
     private fb: FormBuilder,
     private demandService: DemandService,
-    private toast: ToastService
+    private toast: ToastService,
+    private pointsService: PointsService,
+    private http: HttpClient
   ) {
     this.processingForm = this.fb.group({
       actualWeight: ['', [Validators.required, Validators.min(0)]],
@@ -123,6 +128,7 @@ export class CollectionProcessingComponent implements OnInit {
       sortingCorrect: [false, Validators.required],
       verificationNotes: ['']
     });
+    this.apiUrl = 'http://localhost:3000'; // Assuming a default API URL
   }
 
   ngOnInit() {
@@ -194,13 +200,12 @@ export class CollectionProcessingComponent implements OnInit {
   }
 
   async onSubmit() {
-    if (this.processingForm.invalid || !this.selectedDemand) return;
+    if (!this.selectedDemand || !this.processingForm.valid || this.isSubmitting) {
+      return;
+    }
 
     this.isSubmitting = true;
     const formValue = this.processingForm.value;
-
-    // Upload photos first
-    const photoUrls = await this.uploadPhotos();
 
     const updates: Partial<Demand> = {
       status: 'validated',
@@ -211,22 +216,45 @@ export class CollectionProcessingComponent implements OnInit {
         sortingCorrect: formValue.sortingCorrect,
         verificationNotes: formValue.verificationNotes,
         verificationDate: new Date().toISOString(),
-        verificationPhotos: photoUrls
-      },
-      report: this.generateReport(formValue)
+        verificationPhotos: await this.uploadPhotos()
+      }
     };
 
+    // First update the demand status
     this.demandService.updateDemand(this.selectedDemand.id, updates).subscribe({
-      next: () => {
-        this.toast.showSuccess('Processing completed successfully');
-        this.loadProcessedDemands();
-        this.resetForm();
+      next: (updatedDemand) => {
+        if (!updatedDemand.actualWeight) {
+          this.toast.showError('Missing actual weight');
+          return;
+        }
+
+        // Then create a points transaction
+        const pointsTransaction = {
+          userId: updatedDemand.userId,
+          amount: this.pointsService.calculatePointsForCollection(updatedDemand),
+          type: 'earned',
+          source: 'collection',
+          demandId: updatedDemand.id,
+          date: new Date().toISOString(),
+          description: `Points earned from ${updatedDemand.types.join(', ')} collection (${(updatedDemand.actualWeight/1000).toFixed(1)}kg)`
+        };
+
+        // Add points transaction to db.json
+        this.http.post(`${this.apiUrl}/pointsTransactions`, pointsTransaction).subscribe({
+          next: () => {
+            this.toast.showSuccess('Collection validated and points awarded successfully');
+            this.loadProcessedDemands();
+            this.resetForm();
+          },
+          error: (error) => {
+            console.error('Failed to award points:', error);
+            this.toast.showError('Collection validated but failed to award points');
+          }
+        });
       },
       error: (error) => {
-        this.toast.showError('Failed to complete processing');
-        console.error(error);
-      },
-      complete: () => {
+        console.error('Validation failed:', error);
+        this.toast.showError('Failed to validate collection');
         this.isSubmitting = false;
       }
     });
@@ -237,18 +265,6 @@ export class CollectionProcessingComponent implements OnInit {
     return this.selectedPhotos.map(photo => 
       `https://fakeupload.com/${Date.now()}_${photo.file.name}`
     );
-  }
-
-  private generateReport(formValue: any): Demand['report'] {
-    return {
-      reportId: `REP-${Date.now()}`,
-      generatedDate: new Date().toISOString(),
-      collectionSummary: `Collection processed with ${Math.abs(this.weightDifference)}g ${this.weightDifference >= 0 ? 'over' : 'under'} declared weight.`,
-      environmentalImpact: {
-        co2Saved: Math.round(formValue.actualWeight * 0.0005), // Example calculation
-        treesEquivalent: Math.round(formValue.actualWeight * 0.0001) // Example calculation
-      }
-    };
   }
 
   private resetForm() {

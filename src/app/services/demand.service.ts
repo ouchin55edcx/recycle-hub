@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Demand, CreateDemandDto } from '../models/demand.model';
 import { tap, map } from 'rxjs/operators';
+import { PointsService } from './points.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,10 @@ import { tap, map } from 'rxjs/operators';
 export class DemandService {
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private pointsService: PointsService
+  ) {}
 
   createDemand(demand: CreateDemandDto): Observable<Demand> {
     console.log('Creating demand:', demand);
@@ -42,7 +46,27 @@ export class DemandService {
   }
 
   updateDemand(id: string, updates: Partial<Demand>): Observable<Demand> {
-    return this.http.patch<Demand>(`${this.apiUrl}/demands/${id}`, updates);
+    return this.http.patch<Demand>(`${this.apiUrl}/demands/${id}`, updates).pipe(
+      tap(updatedDemand => {
+        // If demand is validated and has actual weight, create points transaction
+        if (updates.status === 'validated' && updatedDemand.actualWeight) {
+          const points = this.pointsService.calculatePointsForCollection(updatedDemand);
+          const weightInKg = (updatedDemand.actualWeight / 1000).toFixed(1);
+          
+          const transaction = {
+            userId: updatedDemand.userId,
+            amount: points,
+            type: 'earned',
+            source: 'collection',
+            demandId: updatedDemand.id,
+            date: new Date().toISOString(),
+            description: `Points earned from ${updatedDemand.types.join(', ')} collection (${weightInKg}kg)`
+          };
+          
+          this.http.post(`${this.apiUrl}/pointsTransactions`, transaction).subscribe();
+        }
+      })
+    );
   }
 
   deleteDemand(id: string): Observable<void> {

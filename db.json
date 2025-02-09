@@ -151,6 +151,131 @@
       "collectorId": "collecteur1",
       "actualWeight": 8000,
       "photos": []
+    },
+    {
+      "id": "db578e77o5fm6xp1k3c",
+      "types": [
+        "metal"
+      ],
+      "weight": 3400,
+      "address": "Numquam voluptatem d",
+      "requestDate": "2025-06-20",
+      "collectionTime": "09:08",
+      "notes": "validate",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 3400,
+      "photos": []
+    },
+    {
+      "id": "rgxre8x01c8m6xp1uvn",
+      "types": [
+        "paper"
+      ],
+      "weight": 8000,
+      "address": "Sint sed vero id bla",
+      "requestDate": "2025-10-03",
+      "collectionTime": "10:05",
+      "notes": "validate ",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 8000,
+      "photos": []
+    },
+    {
+      "id": "nrkg08i3drtm6xp2epf",
+      "types": [
+        "glass"
+      ],
+      "weight": 6600,
+      "address": "Quis vitae ut nihil ",
+      "requestDate": "2025-08-02",
+      "collectionTime": "10:10",
+      "notes": "Irure et aspernatur ",
+      "userId": "8694",
+      "status": "rejected",
+      "collectorId": "collecteur1",
+      "rejectionReason": "caused not validate type "
+    },
+    {
+      "id": "iwverppy73m6xp9d9l",
+      "types": [
+        "glass"
+      ],
+      "weight": 5500,
+      "address": "Id reprehenderit il",
+      "requestDate": "2025-07-14",
+      "collectionTime": "09:07",
+      "notes": "validate collection ",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 5500,
+      "photos": []
+    },
+    {
+      "id": "172aezib1n7m6xpeajn",
+      "types": [
+        "metal"
+      ],
+      "weight": 9100,
+      "address": "Molestias Nam libero",
+      "requestDate": "2025-12-03",
+      "collectionTime": "09:16",
+      "notes": "validate",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 9100,
+      "photos": []
+    },
+    {
+      "id": "1sm2orz4t9um6xpgvmz",
+      "types": [
+        "glass"
+      ],
+      "weight": 8200,
+      "address": "Quo sed eu maiores l",
+      "requestDate": "2025-12-02",
+      "collectionTime": "11:01",
+      "notes": "Vero dolore ab quis ",
+      "userId": "0dc8",
+      "status": "in_progress",
+      "collectorId": "collecteur1"
+    },
+    {
+      "id": "yg3bcu624bm6xphftf",
+      "types": [
+        "plastic"
+      ],
+      "weight": 10000,
+      "address": "Fugit incidunt Nam",
+      "requestDate": "2025-12-28",
+      "collectionTime": "11:22",
+      "notes": "vv",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 10000,
+      "photos": []
+    },
+    {
+      "id": "1mowmd35bfam6xpk1bk",
+      "types": [
+        "paper"
+      ],
+      "weight": 4600,
+      "address": "Consequuntur eum sit",
+      "requestDate": "2025-12-06",
+      "collectionTime": "11:57",
+      "notes": "nnnnnnn",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 4600,
+      "photos": []
     }
   ],
   "pointsTransactions": [
@@ -163,6 +288,36 @@
       "demandId": "dlmpwmvfy8m6xl4amc",
       "date": "2024-03-09T12:00:00.000Z",
       "description": "Points earned from glass collection (15kg)"
+    },
+    {
+      "id": "d678",
+      "userId": "0dc8",
+      "amount": 36,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "172aezib1n7m6xpeajn",
+      "date": "2025-02-09T14:12:49.757Z",
+      "description": "Points earned from metal collection (9.1kg)"
+    },
+    {
+      "id": "abc5",
+      "userId": "0dc8",
+      "amount": 20,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "yg3bcu624bm6xphftf",
+      "date": "2025-02-09T14:15:43.174Z",
+      "description": "Points earned from plastic collection (10.0kg)"
+    },
+    {
+      "id": "fe6f",
+      "userId": "8694",
+      "amount": 5,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "1mowmd35bfam6xpk1bk",
+      "date": "2025-02-09T14:17:15.859Z",
+      "description": "Points earned from paper collection (4.6kg)"
     }
   ],
   "vouchers": [
