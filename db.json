@@ -276,6 +276,86 @@
       "collectorId": "collecteur1",
       "actualWeight": 4600,
       "photos": []
+    },
+    {
+      "id": "pzk8iglxh7cm6xppm7p",
+      "types": [
+        "plastic"
+      ],
+      "weight": 9600,
+      "address": "Vitae nisi in omnis ",
+      "requestDate": "2025-03-17",
+      "collectionTime": "10:53",
+      "notes": "test",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 9600,
+      "photos": []
+    },
+    {
+      "id": "bqzsc3u2f6jm6xpuje6",
+      "types": [
+        "glass"
+      ],
+      "weight": 9600,
+      "address": "Consequatur beatae ",
+      "requestDate": "2025-10-18",
+      "collectionTime": "11:07",
+      "notes": "nnn",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 9600,
+      "photos": []
+    },
+    {
+      "id": "n1zxn3tp1m6xpwj0m",
+      "types": [
+        "glass"
+      ],
+      "weight": 10000,
+      "address": "Dolore neque molesti",
+      "requestDate": "2025-10-09",
+      "collectionTime": "11:20",
+      "notes": "n",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 10000,
+      "photos": []
+    },
+    {
+      "id": "p7464vkatupm6xpx1eb",
+      "types": [
+        "paper"
+      ],
+      "weight": 10000,
+      "address": "Et sit saepe commodi",
+      "requestDate": "2025-11-11",
+      "collectionTime": "10:08",
+      "notes": "nnjnj",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 10000,
+      "photos": []
+    },
+    {
+      "id": "eon359qzk4m6xpyk55",
+      "types": [
+        "metal"
+      ],
+      "weight": 10000,
+      "address": "Enim blanditiis cupi",
+      "requestDate": "2025-03-03",
+      "collectionTime": "11:10",
+      "notes": "n",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 10000,
+      "photos": []
     }
   ],
   "pointsTransactions": [
@@ -318,6 +398,66 @@
       "demandId": "1mowmd35bfam6xpk1bk",
       "date": "2025-02-09T14:17:15.859Z",
       "description": "Points earned from paper collection (4.6kg)"
+    },
+    {
+      "id": "2b26",
+      "userId": "8694",
+      "amount": 19,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "pzk8iglxh7cm6xppm7p",
+      "date": "2025-02-09T14:21:34.302Z",
+      "description": "Points earned from plastic collection (9.6kg)"
+    },
+    {
+      "id": "db6c",
+      "userId": "8694",
+      "amount": 29,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "bqzsc3u2f6jm6xpuje6",
+      "date": "2025-02-09T14:25:25.126Z",
+      "description": "Points earned from glass collection (9.6kg)"
+    },
+    {
+      "id": "151d",
+      "userId": "8694",
+      "amount": 30,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "n1zxn3tp1m6xpwj0m",
+      "date": "2025-02-09T14:27:23.199Z",
+      "description": "Points earned from glass collection (10.0kg)"
+    },
+    {
+      "id": "c9e7",
+      "userId": "8694",
+      "amount": 10,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "p7464vkatupm6xpx1eb",
+      "date": "2025-02-09T14:27:33.596Z",
+      "description": "Points earned from paper collection (10.0kg)"
+    },
+    {
+      "id": "55ff",
+      "userId": "8694",
+      "amount": 40,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "eon359qzk4m6xpyk55",
+      "date": "2025-02-09T14:28:27.435Z",
+      "description": "Points earned from metal collection (10.0kg)"
+    },
+    {
+      "id": "6feb",
+      "userId": "8694",
+      "amount": 100,
+      "type": "spent",
+      "source": "voucher",
+      "voucherId": "f27f",
+      "date": "2025-02-09T14:28:36.836Z",
+      "description": "Converted 100 points to 50DH voucher"
     }
   ],
   "vouchers": [
@@ -330,6 +470,16 @@
       "status": "active",
       "createdAt": "2024-03-09T12:00:00.000Z",
       "expiresAt": "2024-04-09T12:00:00.000Z"
+    },
+    {
+      "id": "f27f",
+      "userId": "8694",
+      "points": 100,
+      "value": 50,
+      "code": "VOUCHER2VGX2L",
+      "status": "active",
+      "createdAt": "2025-02-09T14:28:36.826Z",
+      "expiresAt": "2025-03-11T14:28:36.826Z"
     }
   ]
 }
