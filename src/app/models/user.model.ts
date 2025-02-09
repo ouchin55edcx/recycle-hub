@@ -1,5 +1,7 @@
+import { UserRole } from '../types/user.types';
+
 export interface User {
-    id?: number;
+    id: string;
     email: string;
     password: string;
     firstName: string;
@@ -7,8 +9,10 @@ export interface User {
     birthDate: string;
     phone: string;
     address: string;
-    role: 'user' | 'collector';
+    role: UserRole;
     registrationDate: string;
     profilePhoto?: string;
     points?: number;
   }
+
+export type CreateUserDto = Omit<User, 'id' | 'role' | 'registrationDate'>;

@@ -5,6 +5,8 @@ import { DemandService } from '../../../services/demand.service';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { Demand } from '../../../models/demand.model';
+import { MaterialType } from '../../../types/demand.types';
+import { CreateDemandDto } from '../../../models/demand.model';
 
 @Component({
   selector: 'app-collections',
@@ -23,7 +25,7 @@ export class CollectionsComponent implements OnInit {
   editingId: string | null = null;
 
   collectionForm = new FormGroup({
-    type: new FormControl<string>('', [Validators.required]),
+    type: new FormControl<MaterialType>('plastic', [Validators.required]),
     weight: new FormControl<number | null>(null, [
       Validators.required,
       Validators.min(1000),  // Minimum 1kg
@@ -93,8 +95,8 @@ export class CollectionsComponent implements OnInit {
     }
 
     const formValues = this.collectionForm.value;
-    const demandData: Partial<Demand> = {
-      types: [formValues.type as 'plastic' | 'glass' | 'paper' | 'metal'],
+    const demandData: CreateDemandDto = {
+      types: [formValues.type as MaterialType],
       weight: formValues.weight ?? 0,
       address: formValues.address ?? '',
       requestDate: formValues.collectionDate ?? new Date().toISOString(),
@@ -121,7 +123,7 @@ export class CollectionsComponent implements OnInit {
         return;
       }
 
-      this.demandService.createDemand(demandData as Omit<Demand, 'id'>).subscribe({
+      this.demandService.createDemand(demandData).subscribe({
         next: () => {
           this.toast.showSuccess('Collection created successfully');
           this.loadCollections();
@@ -157,7 +159,7 @@ export class CollectionsComponent implements OnInit {
     this.editingId = collection.id?.toString() ?? null;
     
     this.collectionForm.patchValue({
-      type: collection.types?.[0] ?? '',
+      type: collection.types?.[0] ?? 'plastic',
       weight: collection.weight ?? null,
       address: collection.address ?? '',
       collectionTime: collection.collectionTime ?? '09:00',
@@ -266,7 +268,7 @@ export class CollectionsComponent implements OnInit {
 
   private resetForm(): void {
     this.collectionForm.reset({
-      type: '',
+      type: 'plastic',
       weight: null,
       address: '',
       collectionTime: '',

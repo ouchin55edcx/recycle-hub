@@ -24,14 +24,17 @@ export class ProfileComponent {
 
   updateProfile() {
     if (this.profileForm.valid && this.auth.currentUser) {
+      const formValue = this.profileForm.value;
+      
+      // Ensure non-null values
       const updates: Partial<User> = {
-        email: this.profileForm.value.email!,
-        phone: this.profileForm.value.phone!,
-        address: this.profileForm.value.address!
+        email: formValue.email || this.auth.currentUser.email,
+        phone: formValue.phone || this.auth.currentUser.phone,
+        address: formValue.address || this.auth.currentUser.address
       };
 
       this.auth.updateUserProfile(
-        this.auth.currentUser.id!,
+        this.auth.currentUser.id,
         updates
       ).subscribe({
         next: () => alert('Profile updated successfully!'),
@@ -42,7 +45,7 @@ export class ProfileComponent {
 
   deleteAccount() {
     if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      this.auth.deleteAccount(this.auth.currentUser?.id!).subscribe({
+      this.auth.deleteAccount(this.auth.currentUser?.id || '').subscribe({
         next: () => {
           this.router.navigate(['/']);
         },

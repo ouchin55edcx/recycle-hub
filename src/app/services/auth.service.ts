@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap, switchMap, of } from 'rxjs';
 import { User } from '../models/user.model';
+import { UserRole } from '../types/user.types';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,6 +14,18 @@ export class AuthService {
 
   get currentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  hasRole(role: UserRole): boolean {
+    return this.currentUser?.role === role;
+  }
+
+  isParticulier(): boolean {
+    return this.currentUser?.role === 'particulier';
+  }
+
+  isCollecteur(): boolean {
+    return this.currentUser?.role === 'collecteur';
   }
 
   login(credentials: { email: string; password: string }) {
@@ -34,12 +47,16 @@ export class AuthService {
     );
   }
 
-  register(user: User) {
-    console.log('Registering user:', user);
-    return this.http.post<User>(`${this.apiUrl}/users`, user).pipe(
-      tap(newUser => {
-        console.log('Registration response:', newUser);
-        this.currentUserSubject.next(newUser);
+  register(userData: Omit<User, 'id' | 'role' | 'registrationDate'>) {
+    const newUser: Omit<User, 'id'> = {
+      ...userData,
+      role: 'particulier', // New users are always particuliers
+      registrationDate: new Date().toISOString()
+    };
+
+    return this.http.post<User>(`${this.apiUrl}/users`, newUser).pipe(
+      tap(user => {
+        this.currentUserSubject.next(user);
       })
     );
   }
@@ -86,7 +103,7 @@ export class AuthService {
     );
   }
 
-  updateUserProfile(userId: number, updates: Partial<User>): Observable<User> {
+  updateUserProfile(userId: string, updates: Partial<User>): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/users/${userId}`, updates).pipe(
       tap(updatedUser => {
         this.currentUserSubject.next(updatedUser);
@@ -94,7 +111,7 @@ export class AuthService {
     );
   }
 
-  deleteAccount(userId: number): Observable<void> {
+  deleteAccount(userId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/users/${userId}`).pipe(
       tap(() => {
         this.logout();

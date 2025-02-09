@@ -9,8 +9,32 @@
       "birthDate": "2001-09-04",
       "phone": "0636359603",
       "address": "test update",
-      "role": "user",
+      "role": "particulier",
       "registrationDate": "2025-02-09T12:11:43.750Z"
+    },
+    {
+      "id": "collecteur1",
+      "email": "collecteur@recyclehub.com",
+      "password": "collecteur123",
+      "firstName": "Recycle",
+      "lastName": "Collector",
+      "birthDate": "1990-01-01",
+      "phone": "0600000000",
+      "address": "test update",
+      "role": "collecteur",
+      "registrationDate": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "8694",
+      "email": "mustaphaouchin@gmail.com",
+      "password": "Password$$123",
+      "firstName": "mustapha",
+      "lastName": "ouchin",
+      "birthDate": "2000-02-03",
+      "phone": "0636359603",
+      "address": "Marrakech , Setti fadma el houz ",
+      "role": "particulier",
+      "registrationDate": "2025-02-09T13:52:18.004Z"
     }
   ],
   "demands": [
@@ -25,8 +49,8 @@
       "collectionTime": "09:01",
       "notes": "test validate",
       "userId": "0dc8",
-      "status": "validated",
-      "collectorId": "0dc8",
+      "status": "in_progress",
+      "collectorId": "collecteur1",
       "actualWeight": 2000,
       "photos": []
     },
@@ -41,12 +65,116 @@
       "collectionTime": "09:30",
       "notes": "validate product",
       "userId": "0dc8",
-      "status": "validated",
-      "collectorId": "0dc8",
+      "status": "in_progress",
+      "collectorId": "collecteur1",
       "actualWeight": 8800,
       "photos": [
         "https://fakeupload.com/1739103279738_112939383.jpeg"
       ]
+    },
+    {
+      "id": "czzo93k9x05m6xlnefe",
+      "types": [
+        "glass"
+      ],
+      "weight": 7500,
+      "address": "Quidem inventore per",
+      "requestDate": "2025-12-12",
+      "collectionTime": "09:04",
+      "notes": "validate ",
+      "userId": "0dc8",
+      "status": "in_progress",
+      "collectorId": "collecteur1",
+      "actualWeight": 9500,
+      "photos": []
+    },
+    {
+      "id": "58uvuk9p864m6xogs6r",
+      "types": [
+        "plastic"
+      ],
+      "weight": 3400,
+      "address": "Reprehenderit non mo",
+      "requestDate": "2025-04-15",
+      "collectionTime": "09:01",
+      "notes": "test validate ",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 3400,
+      "photos": []
+    },
+    {
+      "id": "oan7pfdataqm6xoj2fc",
+      "types": [
+        "metal"
+      ],
+      "weight": 5000,
+      "address": "Odit earum velit vol",
+      "requestDate": "2025-03-12",
+      "collectionTime": "09:54",
+      "notes": "validate",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 5000,
+      "photos": []
+    },
+    {
+      "id": "p97usbawp5hm6xolgh2",
+      "types": [
+        "glass"
+      ],
+      "weight": 10000,
+      "address": "Quo dicta labore qui",
+      "requestDate": "2025-11-18",
+      "collectionTime": "09:41",
+      "notes": "validate",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 10000,
+      "photos": []
+    },
+    {
+      "id": "g2v6g0rfk47m6xopzew",
+      "types": [
+        "paper"
+      ],
+      "weight": 8000,
+      "address": "Dolorem dolor labori",
+      "requestDate": "2025-10-16",
+      "collectionTime": "09:30",
+      "notes": "this is validate collection ",
+      "userId": "8694",
+      "status": "validated",
+      "collectorId": "collecteur1",
+      "actualWeight": 8000,
+      "photos": []
+    }
+  ],
+  "pointsTransactions": [
+    {
+      "id": "pt1",
+      "userId": "0dc8",
+      "amount": 15,
+      "type": "earned",
+      "source": "collection",
+      "demandId": "dlmpwmvfy8m6xl4amc",
+      "date": "2024-03-09T12:00:00.000Z",
+      "description": "Points earned from glass collection (15kg)"
+    }
+  ],
+  "vouchers": [
+    {
+      "id": "v1",
+      "userId": "0dc8",
+      "points": 100,
+      "value": 50,
+      "code": "VOUCHER123",
+      "status": "active",
+      "createdAt": "2024-03-09T12:00:00.000Z",
+      "expiresAt": "2024-04-09T12:00:00.000Z"
     }
   ]
 }

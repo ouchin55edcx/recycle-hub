@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Demand, CreateDemandDto } from '../models/demand.model';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +47,39 @@ export class DemandService {
 
   deleteDemand(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/demands/${id}`);
+  }
+
+  getProcessingDemands(): Observable<Demand[]> {
+    return this.http.get<Demand[]>(`${this.apiUrl}/demands?status=in_progress&status=completed`);
+  }
+
+  updateDemandStatus(id: string, status: Demand['status'], details?: any): Observable<Demand> {
+    return this.http.patch<Demand>(`${this.apiUrl}/demands/${id}`, {
+      status,
+      ...details
+    });
+  }
+
+  generateCollectionReport(demandId: string): Observable<Demand['report']> {
+    return this.http.get<Demand>(`${this.apiUrl}/demands/${demandId}`).pipe(
+      map(demand => {
+        if (!demand.verificationDetails || !demand.actualWeight) {
+          throw new Error('Verification details or actual weight not found');
+        }
+        
+        // Now TypeScript knows actualWeight is defined
+        const actualWeight = demand.actualWeight;
+        
+        return {
+          reportId: `REP-${Date.now()}`,
+          generatedDate: new Date().toISOString(),
+          collectionSummary: `Collection of ${actualWeight}g of ${demand.types.join(', ')}`,
+          environmentalImpact: {
+            co2Saved: Math.round(actualWeight * 0.0005),
+            treesEquivalent: Math.round(actualWeight * 0.0001)
+          }
+        };
+      })
+    );
   }
 }

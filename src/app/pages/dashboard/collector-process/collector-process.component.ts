@@ -6,6 +6,7 @@ import { DemandService } from '../../../services/demand.service';
 import { AuthService } from '../../../services/auth.service';
 import { Demand } from '../../../models/demand.model';
 import { ToastService } from '../../../services/toast.service';
+import { DemandStatus } from '../../../types/demand.types';
 
 @Component({
   selector: 'app-collector-process',
@@ -197,16 +198,18 @@ export class CollectorProcessComponent implements OnInit {
   }
 
   startCollection(demand: Demand): void {
-    this.demandService.updateDemand(demand.id, { status: 'in_progress' }).subscribe({
-      next: (updatedDemand) => {
-        this.selectedDemand = updatedDemand;
-        this.loadAvailableDemands();
-      },
-      error: (error) => {
-        this.errorMessage = 'Failed to start collection';
-        console.error(error);
-      }
-    });
+    if (demand.status === 'pending' || demand.status === 'occupied') {
+      this.demandService.updateDemand(demand.id, { status: 'in_progress' }).subscribe({
+        next: (updatedDemand) => {
+          this.selectedDemand = updatedDemand;
+          this.loadAvailableDemands();
+        },
+        error: (error) => {
+          this.errorMessage = 'Failed to start collection';
+          console.error(error);
+        }
+      });
+    }
   }
 
   onFileSelected(event: Event): void {
@@ -285,7 +288,7 @@ export class CollectorProcessComponent implements OnInit {
     return classes[type] || '';
   }
 
-  getStatusClass(status: 'pending' | 'validated' | 'rejected' | 'in_progress' | 'occupied'): string {
+  getStatusClass(status: DemandStatus): string {
     const classes = {
       pending: 'bg-yellow-100 text-yellow-800',
       occupied: 'bg-blue-100 text-blue-800',
@@ -298,5 +301,11 @@ export class CollectorProcessComponent implements OnInit {
 
   getFirstType(demand: Demand): string {
     return demand.types?.[0] || 'unknown';
+  }
+
+  canProcessDemand(selectedDemand: Demand | null): boolean {
+    return !!selectedDemand && 
+           (selectedDemand.status === 'in_progress' || 
+            selectedDemand.status === 'occupied');
   }
 }

@@ -3,6 +3,9 @@ import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { CollectionProcessingComponent } from './pages/dashboard/collection-processing/collection-processing.component';
+import { PointsComponent } from './pages/dashboard/points/points.component';
+import { RoleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,12 +26,26 @@ export const routes: Routes = [
       {
         path: 'collections',
         loadComponent: () => import('./pages/dashboard/collections/collections.component')
-          .then(m => m.CollectionsComponent)
+          .then(m => m.CollectionsComponent),
+        canActivate: [RoleGuard],
+        data: { role: 'particulier' }
       },
       {
         path: 'collector-process',
         loadComponent: () => import('./pages/dashboard/collector-process/collector-process.component')
-          .then(m => m.CollectorProcessComponent)
+          .then(m => m.CollectorProcessComponent),
+        canActivate: [RoleGuard],
+        data: { role: 'collecteur' }
+      },
+      {
+        path: 'processing',
+        component: CollectionProcessingComponent,
+        canActivate: [authGuard]
+      },
+      {
+        path: 'points',
+        component: PointsComponent,
+        canActivate: [authGuard]
       }
     ]
   },

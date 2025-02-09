@@ -8,6 +8,7 @@ import { passwordStrengthValidator } from '../../validators/password.validator';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ToastService } from '../../services/toast.service';
+import { UserRole } from '../../types/user.types';
 
 @Component({
   standalone: true,
@@ -265,17 +266,18 @@ export class SignupComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       const formValue = this.signupForm.value;
-
-      const userData: User = {
-        email: formValue.email!,
-        password: formValue.password!,
-        firstName: formValue.firstName!,
-        lastName: formValue.lastName!,
-        birthDate: formValue.birthDate!,
-        phone: formValue.phone!,
-        address: formValue.address!,
-        role: 'user',
-        registrationDate: new Date().toISOString(),
+      
+      // Ensure all required fields are present and non-null
+      const userData = {
+        email: formValue.email || '',
+        password: formValue.password || '',
+        firstName: formValue.firstName || '',
+        lastName: formValue.lastName || '',
+        birthDate: formValue.birthDate || '',
+        phone: formValue.phone || '',
+        address: formValue.address || '',
+        role: 'particulier' as UserRole,
+        registrationDate: new Date().toISOString()
       };
 
       this.auth.register(userData).subscribe({
