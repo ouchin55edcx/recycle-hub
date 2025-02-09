@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: true,
@@ -93,7 +94,13 @@ export class LoginComponent {
     password: new FormControl('', Validators.required)
   });
 
-  constructor(private auth: AuthService, private router: Router) {}
+  errorMessage: string = '';
+
+  constructor(
+    private auth: AuthService, 
+    private router: Router,
+    private toast: ToastService
+  ) {}
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -103,9 +110,29 @@ export class LoginComponent {
       };
 
       this.auth.login(credentials).subscribe({
-        next: () => this.router.navigate(['/dashboard']), 
-        error: (err) => console.error('Login failed:', err)
+        next: () => this.router.navigate(['/dashboard']),
+        error: (err) => {
+          this.toast.showError('Invalid email or password');
+          console.error('Login failed:', err);
+        }
       });
+    } else {
+      this.toast.showError('Please fill in all required fields correctly');
     }
+  }
+
+  getEmailError(): string {
+    const control = this.loginForm.get('email');
+    if (control?.errors) {
+      if (control.errors['required']) return 'Email is required';
+      if (control.errors['email']) return 'Please enter a valid email';
+    }
+    return '';
+  }
+
+  getPasswordError(): string {
+    const control = this.loginForm.get('password');
+    if (control?.errors?.['required']) return 'Password is required';
+    return '';
   }
 }

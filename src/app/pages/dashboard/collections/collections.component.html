@@ -21,7 +21,8 @@
     <!-- Header -->
     <div class="mb-8 space-y-2">
       <h2 class="text-3xl font-bold text-green-800 tracking-tight">
-        {{ activeView === 'form' ? 'New Collection Request' : 'Collection History' }}
+        {{ isEditing ? 'Edit Collection Request' : 
+           (activeView === 'form' ? 'New Collection Request' : 'Collection History') }}
       </h2>
       <p class="text-gray-600 text-lg">
         {{ activeView === 'form' ? 'Schedule a new waste collection' : 'View and manage your collection requests' }}
@@ -70,27 +71,15 @@
           <!-- Weight -->
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700">Weight (grams) *</label>
-            <div class="relative">
-              <input
-                type="number"
-                formControlName="weight"
-                min="1000"
-                max="10000"
-                class="block w-full rounded-lg border-2 border-gray-300
-                       px-4 py-3 pl-4 pr-12
-                       focus:border-green-500 focus:ring-2 focus:ring-green-200
-                       transition-all duration-200 ease-in-out
-                       text-gray-700 shadow-sm"
-                placeholder="Enter weight">
-              <span class="absolute right-4 top-3 text-gray-500">grams</span>
-            </div>
-            <div *ngIf="collectionForm.get('weight')?.errors?.['min']"
-                 class="text-red-500 text-sm mt-1 flex items-center">
-              <span class="mr-1">⚠️</span> Minimum weight is 1000g
-            </div>
-            <div *ngIf="collectionForm.get('weight')?.errors?.['max']"
-                 class="text-red-500 text-sm mt-1 flex items-center">
-              <span class="mr-1">⚠️</span> Maximum weight is 10000g
+            <input
+              type="number"
+              formControlName="weight"
+              class="w-full px-4 py-3 border rounded-lg"
+              [class.border-red-500]="collectionForm.get('weight')?.invalid && collectionForm.get('weight')?.touched"
+            />
+            <div *ngIf="collectionForm.get('weight')?.touched && getWeightError()" 
+                 class="text-red-500 text-sm">
+              {{ getWeightError() }}
             </div>
           </div>
 
@@ -112,14 +101,14 @@
               <input
                 type="time"
                 formControlName="collectionTime"
-                min="09:00"
-                max="18:00"
-                class="block w-full rounded-lg border-2 border-gray-300
-                       px-4 py-3
-                       focus:border-green-500 focus:ring-2 focus:ring-green-200
-                       transition-all duration-200 ease-in-out
-                       text-gray-700 shadow-sm">
-              <span class="text-sm text-gray-500">Available between 09:00 and 18:00</span>
+                class="w-full px-4 py-3 border rounded-lg"
+                [class.border-red-500]="collectionForm.get('collectionTime')?.invalid && collectionForm.get('collectionTime')?.touched"
+              />
+              <div *ngIf="collectionForm.get('collectionTime')?.touched && getTimeError()" 
+                   class="text-red-500 text-sm">
+                {{ getTimeError() }}
+              </div>
+              <p class="text-sm text-gray-500">Collection hours: 9:00 AM - 6:00 PM</p>
             </div>
           </div>
 
@@ -129,12 +118,13 @@
             <textarea
               formControlName="address"
               rows="3"
-              class="block w-full rounded-lg border-2 border-gray-300
-                     px-4 py-3
-                     focus:border-green-500 focus:ring-2 focus:ring-green-200
-                     transition-all duration-200 ease-in-out
-                     text-gray-700 shadow-sm resize-none"
-              placeholder="Enter your complete address"></textarea>
+              class="w-full px-4 py-3 border rounded-lg"
+              [class.border-red-500]="collectionForm.get('address')?.invalid && collectionForm.get('address')?.touched"
+            ></textarea>
+            <div *ngIf="collectionForm.get('address')?.touched && getAddressError()" 
+                 class="text-red-500 text-sm">
+              {{ getAddressError() }}
+            </div>
           </div>
 
           <!-- Photos -->
@@ -180,13 +170,14 @@
           <div class="flex justify-end">
             <button
               type="submit"
-              [disabled]="collectionForm.invalid || pendingRequests >= 3"
+              [disabled]="collectionForm.invalid || (!isEditing && pendingRequests >= 3)"
               class="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg
                      hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
                      disabled:opacity-50 disabled:cursor-not-allowed
                      transform hover:scale-105
                      transition-all duration-200">
-              Submit Request
+              {{ isEditing ? 'Update Request' : 
+                 (pendingRequests >= 3 ? 'Maximum requests reached' : 'Submit Request') }}
             </button>
           </div>
         </form>
@@ -202,9 +193,9 @@
         </svg>
         <p class="mt-4 text-gray-500 text-lg">No collection requests found.</p>
         <button
-          (click)="activeView = 'form'"
+          (click)="createNewCollection()"
           class="mt-4 px-6 py-2 text-sm font-medium text-green-600 hover:text-green-500">
-          Create your first request
+          Create new collection
         </button>
       </div>
 
@@ -227,12 +218,12 @@
             <td class="px-6 py-4 whitespace-nowrap">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                       [ngClass]="{
-                        'bg-purple-100 text-purple-700': collection.type === 'plastic',
-                        'bg-blue-100 text-blue-700': collection.type === 'glass',
-                        'bg-yellow-100 text-yellow-700': collection.type === 'paper',
-                        'bg-gray-100 text-gray-700': collection.type === 'metal'
+                        'bg-purple-100 text-purple-700': getFirstType(collection) === 'plastic',
+                        'bg-blue-100 text-blue-700': getFirstType(collection) === 'glass',
+                        'bg-yellow-100 text-yellow-700': getFirstType(collection) === 'paper',
+                        'bg-gray-100 text-gray-700': getFirstType(collection) === 'metal'
                       }">
-                  {{ collection.type }}
+                  {{ getFirstType(collection) }}
                 </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap font-medium">
@@ -265,15 +256,13 @@
               </button>
               <button
                 *ngIf="collection.status === 'pending'"
-                (click)="deleteCollection(collection.id)"
-                class="text-red-600 hover:text-red-900 transition-colors">
-                  <span class="flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    Delete
-                  </span>
-              </button>
+                (click)="deleteCollection(collection.id.toString())"
+                class="text-red-600 hover:text-red-800">
+                  <span class="sr-only">Delete</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
             </td>
           </tr>
           </tbody>
@@ -320,4 +309,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Add validation feedback -->
+<div *ngIf="collectionForm.invalid && collectionForm.touched" 
+     class="text-red-500 text-sm mt-2">
+  Please fill in all required fields correctly
 </div>

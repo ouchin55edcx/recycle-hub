@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -10,6 +11,7 @@ import { User } from '../../../models/user.model';
 })
 export class ProfileComponent {
   auth = inject(AuthService);
+  router = inject(Router);
   
   profileForm = new FormGroup({
     email: new FormControl(this.auth.currentUser?.email, [Validators.required, Validators.email]),
@@ -34,6 +36,17 @@ export class ProfileComponent {
       ).subscribe({
         next: () => alert('Profile updated successfully!'),
         error: (err) => console.error('Update failed:', err)
+      });
+    }
+  }
+
+  deleteAccount() {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      this.auth.deleteAccount(this.auth.currentUser?.id!).subscribe({
+        next: () => {
+          this.router.navigate(['/']);
+        },
+        error: (err) => console.error('Delete failed:', err)
       });
     }
   }

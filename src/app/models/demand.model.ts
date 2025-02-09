@@ -1,18 +1,24 @@
-// demand.model.ts
 export interface Demand {
-  id: number;
-  type: 'plastic' | 'glass' | 'paper' | 'metal';
+  id: string;
+  types: ('plastic' | 'glass' | 'paper' | 'metal')[]; 
   weight: number;
+  actualWeight?: number;
   address: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'validated' | 'rejected' | 'in_progress' | 'occupied';
   requestDate: string;
   collectionTime: string;
   notes?: string;
-  userId: number;
+  userId: string;
+  collectorId?: string;
   photos?: string[];
+  rejectionReason?: string;
 }
 
-// Type for creating a new demand without id
-export type CreateDemandDto = Omit<Demand, 'id' | 'status'> & {
-  status?: 'pending' | 'approved' | 'rejected';
-};
+export interface CreateDemandDto {
+  types: ('plastic' | 'glass' | 'paper' | 'metal')[]; 
+  weight: number;
+  address: string;
+  requestDate: string;
+  collectionTime: string;
+  userId: string;
+}

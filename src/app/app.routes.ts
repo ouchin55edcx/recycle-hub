@@ -24,6 +24,11 @@ export const routes: Routes = [
         path: 'collections',
         loadComponent: () => import('./pages/dashboard/collections/collections.component')
           .then(m => m.CollectionsComponent)
+      },
+      {
+        path: 'collector-process',
+        loadComponent: () => import('./pages/dashboard/collector-process/collector-process.component')
+          .then(m => m.CollectorProcessComponent)
       }
     ]
   },

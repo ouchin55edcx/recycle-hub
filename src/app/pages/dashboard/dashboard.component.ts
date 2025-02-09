@@ -27,6 +27,14 @@ import { AuthService } from '../../services/auth.service';
               >
                 Collections
               </a>
+
+              <a
+                routerLink="/dashboard/collector-process"
+                class="text-green-700 hover:text-green-900 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
+                routerLinkActive="bg-green-100 text-green-900"
+              >
+                Collector Process
+              </a>
             </div>
 
             <!-- Logout Button -->

@@ -1,0 +1,64 @@
+<div *ngIf="errorMessage" 
+     class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+  {{ errorMessage }}
+</div>
+
+<div class="space-y-4">
+  <!-- Email field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Email</label>
+    <input
+      formControlName="email"
+      type="email"
+      class="w-full px-4 py-2 border rounded-md"
+    />
+    <div *ngIf="signupForm.get('email')?.touched && getEmailError()" 
+         class="text-red-500 text-sm mt-1">
+      {{ getEmailError() }}
+    </div>
+  </div>
+
+  <!-- First name field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">First Name</label>
+    <input
+      formControlName="firstName"
+      type="text"
+      class="w-full px-4 py-2 border rounded-md"
+    />
+    <div *ngIf="signupForm.get('firstName')?.touched && getFirstNameError()" 
+         class="text-red-500 text-sm mt-1">
+      {{ getFirstNameError() }}
+    </div>
+  </div>
+
+  <!-- Last name field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Last Name</label>
+    <input
+      formControlName="lastName"
+      type="text"
+      class="w-full px-4 py-2 border rounded-md"
+    />
+    <div *ngIf="signupForm.get('lastName')?.touched && getLastNameError()" 
+         class="text-red-500 text-sm mt-1">
+      {{ getLastNameError() }}
+    </div>
+  </div>
+
+  <!-- Password field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Password</label>
+    <input
+      formControlName="password"
+      type="password"
+      class="w-full px-4 py-2 border rounded-md"
+    />
+    <div *ngIf="signupForm.get('password')?.touched && getPasswordErrors().length > 0" 
+         class="text-red-500 text-sm mt-1">
+      <ul class="list-disc list-inside">
+        <li *ngFor="let error of getPasswordErrors()">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
+</div> 

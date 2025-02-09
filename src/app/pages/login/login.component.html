@@ -1,0 +1,17 @@
+<!-- Add this after the email input -->
+<div *ngIf="loginForm.get('email')?.touched && getEmailError()" 
+     class="text-red-500 text-sm mt-1">
+  {{ getEmailError() }}
+</div>
+
+<!-- Add this after the password input -->
+<div *ngIf="loginForm.get('password')?.touched && getPasswordError()" 
+     class="text-red-500 text-sm mt-1">
+  {{ getPasswordError() }}
+</div>
+
+<!-- Add this for general login errors -->
+<div *ngIf="errorMessage" 
+     class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+  {{ errorMessage }}
+</div> 

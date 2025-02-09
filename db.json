@@ -1,64 +1,52 @@
 {
   "users": [
     {
-      "id": "be74",
-      "email": "girym@mailinator.com",
+      "id": "0dc8",
+      "email": "cawoz@mailinator.com",
       "password": "Pa$$w0rd!",
-      "firstName": "Quos pariatur Vel r",
-      "lastName": "Aut velit sit aliqua",
-      "birthDate": "2003-04-12",
-      "phone": "0602010201",
-      "address": "qdqdqdq",
+      "firstName": "Quisquam dolores fug",
+      "lastName": "Mollitia vero sed au",
+      "birthDate": "2001-09-04",
+      "phone": "0636359603",
+      "address": "test update",
       "role": "user",
-      "registrationDate": "2025-02-07T21:04:44.236Z"
-    },
-    {
-      "id": "1bfe",
-      "email": "mysy@mailinator.com",
-      "password": "Pa$$w0rd!",
-      "firstName": "Qui voluptatibus eni",
-      "lastName": "Aspernatur animi do",
-      "birthDate": "1988-10-10",
-      "phone": "0636321413",
-      "address": "test",
-      "role": "user",
-      "registrationDate": "2025-02-07T21:52:39.085Z"
-    },
-    {
-      "id": "05f7",
-      "email": "pyhapused@mailinator.com",
-      "password": "Pa$$w0rd!",
-      "firstName": "Accusantium rerum ar",
-      "lastName": "Perferendis consequa",
-      "birthDate": "2012-02-14",
-      "phone": "0636353214",
-      "address": "sdsdfsd",
-      "role": "user",
-      "registrationDate": "2025-02-08T11:27:00.019Z"
+      "registrationDate": "2025-02-09T12:11:43.750Z"
     }
   ],
   "demands": [
     {
-      "id": "4e1f",
-      "type": "glass",
-      "weight": 1942,
-      "address": "Voluptatum quos quis",
-      "status": "pending",
-      "requestDate": "2025-01-02",
-      "collectionTime": "19:05",
-      "notes": "Aliquip proident mi",
-      "userId": "1bfe"
+      "id": "dlmpwmvfy8m6xl4amc",
+      "types": [
+        "glass"
+      ],
+      "weight": 4600,
+      "address": "test update",
+      "requestDate": "2025-08-08",
+      "collectionTime": "09:01",
+      "notes": "test validate",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "0dc8",
+      "actualWeight": 2000,
+      "photos": []
     },
     {
-      "id": "55f3",
-      "type": "glass",
-      "weight": 1942,
-      "address": "Voluptatum quos quis",
-      "status": "pending",
-      "requestDate": "2025-01-02",
-      "collectionTime": "19:05",
-      "notes": "Aliquip proident midsdc",
-      "userId": "1bfe"
+      "id": "7ucsbmbacq5m6xl699a",
+      "types": [
+        "metal"
+      ],
+      "weight": 8800,
+      "address": "Molestiae occaecat u",
+      "requestDate": "2025-06-10",
+      "collectionTime": "09:30",
+      "notes": "validate product",
+      "userId": "0dc8",
+      "status": "validated",
+      "collectorId": "0dc8",
+      "actualWeight": 8800,
+      "photos": [
+        "https://fakeupload.com/1739103279738_112939383.jpeg"
+      ]
     }
   ]
 }

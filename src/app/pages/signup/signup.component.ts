@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
+import { passwordStrengthValidator } from '../../validators/password.validator';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: true,
@@ -63,9 +67,9 @@ import { CommonModule } from '@angular/common';
                              focus:ring-green-500 focus:border-transparent transition"
                       placeholder="your@email.com"
                     />
-                    <div *ngIf="signupForm.get('email')?.touched && signupForm.get('email')?.invalid"
+                    <div *ngIf="signupForm.get('email')?.touched && getEmailError()"
                          class="text-red-500 text-sm mt-1">
-                      Please enter a valid email
+                      {{ getEmailError() }}
                     </div>
                   </div>
                   
@@ -80,7 +84,7 @@ import { CommonModule } from '@angular/common';
                     />
                     <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid"
                          class="text-red-500 text-sm mt-1">
-                      Password must be at least 6 characters
+                      Password must be at least 8 characters and include uppercase, lowercase, number, and special character
                     </div>
                   </div>
                 </div>
@@ -100,6 +104,10 @@ import { CommonModule } from '@angular/common';
                                focus:ring-green-500 focus:border-transparent transition"
                         placeholder="John"
                       />
+                      <div *ngIf="signupForm.get('firstName')?.touched && getFirstNameError()"
+                           class="text-red-500 text-sm mt-1">
+                        {{ getFirstNameError() }}
+                      </div>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
@@ -110,6 +118,10 @@ import { CommonModule } from '@angular/common';
                                focus:ring-green-500 focus:border-transparent transition"
                         placeholder="Doe"
                       />
+                      <div *ngIf="signupForm.get('lastName')?.touched && getLastNameError()"
+                           class="text-red-500 text-sm mt-1">
+                        {{ getLastNameError() }}
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -199,10 +211,18 @@ import { CommonModule } from '@angular/common';
 })
 export class SignupComponent {
   currentStep = 1;
+  errorMessage: string = '';
 
   signupForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email],
+      asyncValidators: [this.checkEmailExists()]
+    }),
+    password: new FormControl('', [
+      Validators.required, 
+      Validators.minLength(8),
+      passwordStrengthValidator
+    ]),
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
     birthDate: new FormControl('', Validators.required),
@@ -210,7 +230,11 @@ export class SignupComponent {
     address: new FormControl('', Validators.required),
   });
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService, 
+    private router: Router,
+    private toast: ToastService
+  ) {}
 
   isStepValid(): boolean {
     if (this.currentStep === 1) {
@@ -225,7 +249,6 @@ export class SignupComponent {
     }
     return true;
   }
-
 
   nextStep() {
     if (this.isStepValid() && this.currentStep < 3) {
@@ -256,9 +279,63 @@ export class SignupComponent {
       };
 
       this.auth.register(userData).subscribe({
-        next: () => this.router.navigate(['/login']),
-        error: (err) => console.error('Registration failed:', err),
+        next: () => {
+          this.toast.showSuccess('Registration successful! Please log in.');
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.toast.showError('Registration failed. Please try again.');
+          console.error('Registration failed:', err);
+        }
       });
+    } else {
+      this.toast.showError('Please fix the errors in the form before submitting.');
     }
+  }
+
+  private checkEmailExists() {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return this.auth.checkEmailExists(control.value).pipe(
+        map(exists => exists ? { emailTaken: true } : null),
+        catchError(() => of(null))
+      );
+    };
+  }
+
+  getPasswordErrors(): string[] {
+    const control = this.signupForm.get('password');
+    if (!control?.errors?.['passwordStrength']) return [];
+
+    const errors: string[] = [];
+    const strength = control.errors['passwordStrength'];
+
+    if (!strength.hasUpperCase) errors.push('Missing uppercase letter');
+    if (!strength.hasLowerCase) errors.push('Missing lowercase letter');
+    if (!strength.hasNumeric) errors.push('Missing number');
+    if (!strength.hasSpecialChar) errors.push('Missing special character');
+
+    return errors;
+  }
+
+  getEmailError(): string {
+    const control = this.signupForm.get('email');
+    if (control?.errors) {
+      if (control.errors['required']) return 'Email is required';
+      if (control.errors['email']) return 'Please enter a valid email';
+      if (control.errors['emailTaken']) return 'This email is already registered';
+    }
+    return '';
+  }
+
+  getFirstNameError(): string {
+    const control = this.signupForm.get('firstName');
+    if (control?.errors?.['required']) return 'First name is required';
+    return '';
+  }
+
+  getLastNameError(): string {
+    const control = this.signupForm.get('lastName');
+    if (control?.errors?.['required']) return 'Last name is required';
+    return '';
   }
 }

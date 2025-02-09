@@ -57,5 +57,17 @@
           </button>
         </div>
       </form>
+  
+      <!-- Add this after the Update Profile button -->
+      <div class="mt-8 border-t pt-8">
+        <h3 class="text-xl font-semibold text-red-600 mb-4">Danger Zone</h3>
+        <button
+          (click)="deleteAccount()"
+          class="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 
+                 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 
+                 transition duration-200">
+          Delete Account
+        </button>
+      </div>
     </div>
   </div>    
