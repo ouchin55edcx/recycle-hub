@@ -1,122 +1,82 @@
-# RecycleHub
+# RecycleHub - Waste Collection Management Platform
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+## Overview
+RecycleHub is a modern web application that connects individuals (particuliers) with waste collectors to facilitate recycling and promote environmental sustainability. The platform rewards users with points for their recycling efforts, which can be converted into vouchers.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### For Individuals (Particuliers)
+- Create and manage recycling collection requests
+- Track collection status in real-time
+- Earn points based on recycling contributions:
+  - Plastic: 2 points/kg
+  - Glass: 3 points/kg
+  - Paper: 1 point/kg
+  - Metal: 4 points/kg
+- Convert points to vouchers:
+  - 100 points = 50 DH voucher
+  - 200 points = 120 DH voucher
+  - 500 points = 350 DH voucher
+- View collection history and points balance
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# recycle-hub
+### For Collectors
+- View and manage collection requests
+- Update collection status
+- Validate collected materials
+- Record actual weights and material types
+- Process collection verifications
 
 
-src/
-└── app/
-    ├── components/              // Reusable components (e.g., header, footer, navbar)
-    │   └── shared/
-    │       ├── header/
-    │       │   ├── header.component.ts
-    │       │   ├── header.component.html
-    │       │   └── header.component.scss
-    │       └── footer/
-    │           ├── footer.component.ts
-    │           ├── footer.component.html
-    │           └── footer.component.scss
-    │
-    ├── pages/                   // Main pages/views of the app
-    │   ├── auth/                // Authentication pages
-    │   │   ├── login/
-    │   │   │   ├── login.component.ts
-    │   │   │   ├── login.component.html
-    │   │   │   └── login.component.scss
-    │   │   └── register/
-    │   │       ├── register.component.ts
-    │   │       ├── register.component.html
-    │   │       └── register.component.scss
-    │   │
-    │   ├── user/                // Pages for particuliers (users)
-    │   │   ├── dashboard/
-    │   │   │   ├── dashboard.component.ts
-    │   │   │   ├── dashboard.component.html
-    │   │   │   └── dashboard.component.scss
-    │   │   ├── profile/
-    │   │   │   ├── profile.component.ts
-    │   │   │   ├── profile.component.html
-    │   │   │   └── profile.component.scss
-    │   │   └── requests/         // Recycling requests management
-    │   │       ├── create-request/
-    │   │       │   ├── create-request.component.ts
-    │   │       │   ├── create-request.component.html
-    │   │       │   └── create-request.component.scss
-    │   │       └── request-list/
-    │   │           ├── request-list.component.ts
-    │   │           ├── request-list.component.html
-    │   │           └── request-list.component.scss
-    │   │
-    │   └── collector/           // Pages for collectors
-    │       └── collector-dashboard/
-    │           ├── collector-dashboard.component.ts
-    │           ├── collector-dashboard.component.html
-    │           └── collector-dashboard.component.scss
-    │
-    ├── services/                // Services for business logic (e.g., AuthService, RequestService)
-    │   ├── auth.service.ts
-    │   └── request.service.ts
-    │
-    ├── models/                  // Interfaces and types (e.g., User, Request)
-    │   ├── user.model.ts
-    │   └── request.model.ts
-    │
-    ├── app-routing.module.ts    // Application-level routes for navigation
-    └── app.module.ts            // Main module declaration
-    
+
+## Usage Example
+
+### Individual User Flow
+1. Register/Login as a particulier
+2. Create a collection request:
+   ```typescript
+   // Example collection request
+   {
+     "types": ["plastic", "glass"],
+     "weight": 5000, // in grams
+     "address": "123 Recycling St",
+     "requestDate": "2024-02-15",
+     "collectionTime": "10:00"
+   }
+   ```
+
+3. Track request status
+4. Receive points after validation
+5. Convert points to vouchers
+
+### Collector Flow
+1. Login as a collector
+2. View assigned collections
+3. Process collection:
+   ```typescript
+   // Example collection validation
+   {
+     "status": "validated",
+     "actualWeight": 4800,
+     "verificationDetails": {
+       "materialVerified": true,
+       "sortingCorrect": true,
+       "verificationNotes": "Well sorted materials"
+     }
+   }
+   ```
+
+
+## Points System
+- Points are automatically awarded after collection validation
+- Points calculation is based on material type and weight
+- Real-time points balance updates
+- Secure points-to-voucher conversion
+- Transaction history tracking
+
+
+
+## Acknowledgments
+- Angular team for the fantastic framework
+- TailwindCSS for the utility-first CSS framework
+- JSON Server for the mock backend capabilities
+
